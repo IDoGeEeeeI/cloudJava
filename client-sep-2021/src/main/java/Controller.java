@@ -1,57 +1,109 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import com.*;
+import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
+import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
 public class Controller implements Initializable {
-
     public ListView<String> listView;
+    public  ListView<String> listView1;
+    public Button butSend;
+    public Button butDown;
     public TextField input;
-    private DataInputStream is;
-    private DataOutputStream os;
+    private ObjectDecoderInputStream is;
+    private ObjectEncoderOutputStream os;
+    private  static  final byte [] buffer = new byte[1024];
+    private static   String DIR_CLIENT = "client-sep-2021/rootForClient";
+    private Net net;
 
-    public void send(ActionEvent actionEvent) throws Exception {
-        String msg = input.getText();
+    protected void receivedFile(ActionEvent actionEvent){
+       String fileName = input.getText();
+       input.clear();
+       Path path = Paths.get(fileName);
+       net.sendCommand(new FileRequest(path));
+
+    }
+
+    public void send(ActionEvent actionEvent) throws  Exception{
+        String fileName = input.getText();
         input.clear();
-        os.writeUTF(msg);
-        os.flush();
+        Path path = Paths.get((DIR_CLIENT), fileName);
+        net.sendCommand(new FileMassage(path));
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            Socket socket = new Socket("localhost", 8189);
-            is = new DataInputStream(socket.getInputStream());
-            os = new DataOutputStream(socket.getOutputStream());
-            Thread daemon = new Thread(() -> {
-                try {
-                    while (true) {
-                        String msg = is.readUTF();
-                        log.debug("received: {}", msg);
-                        Platform.runLater(() -> listView.getItems().add(msg));
-                    }
-                } catch (Exception e) {
-                    log.error("exception while read from input stream");
-                }
-            });
-            daemon.setDaemon(true);
-            daemon.start();
-        } catch (IOException ioException) {
-            log.error("e=", ioException);
-        }
+        net = Net.getInstance(s-> Platform.runLater(()-> listView.getItems().add(String.valueOf(s))));
+            try{
+                fileIn();
+            }catch (IOException e){
+              e.printStackTrace();
+            }
+
+
+
+//        try {
+//            fileIn();
+//            Socket socket = new Socket("localhost", 8189);
+//            is = new ObjectDecoderInputStream(socket.getInputStream());
+//            os = new ObjectEncoderOutputStream(socket.getOutputStream());
+//            Thread daemon = new Thread(() -> {
+//                try {
+//                    while (true) {
+//                        Command msg =(Command) is.readObject();
+//                        // TODO: 29.09.2021
+//                        switch (msg.getType()){
+//                            // TODO: 29.09.2021
+//                        }
+//                        log.debug("received: {}", msg);
+////                        Platform.runLater(() -> listView.getItems().add(msg));
+//                    }
+//                } catch (Exception e) {
+//                    log.debug("exception while read from input stream");
+//                }
+//            });
+//            daemon.setDaemon(true);
+//            daemon.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        };
+    }
+
+//на клиенте
+    private void fileIn()throws IOException{
+        listView.getItems().clear();
+        listView.getItems().addAll(
+                Files.list(Paths.get(((DIR_CLIENT))))
+                        .map(s->s.getFileName().toString())
+                        .collect(Collectors.toList())
+        );
+        listView.setOnMouseClicked(e ->{
+            if(e.getClickCount()==2) {
+                String item = listView.getSelectionModel().getSelectedItem();
+                input.setText(item);
+            }
+        });
+        listView1.setOnMouseClicked(e ->{
+            if(e.getClickCount()==2) {
+                String item = listView1.getSelectionModel().getSelectedItem();
+                input.setText(item);
+            }
+        });
+
     }
 }
