@@ -6,8 +6,8 @@ public class FileRequest extends  Command{
     //верни файл с именем
     private final String fName;
 
-    public FileRequest(Path path){
-        fName = path.getFileName().toString();
+    public FileRequest(String name){
+        this.fName=name;
     }
 
     public String getfName(){

@@ -15,6 +15,8 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+
 @Slf4j
 
 public class NettyEchoServer {
@@ -31,7 +33,7 @@ try {
             .channel(NioServerSocketChannel.class)
             .childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
-                protected void initChannel(SocketChannel channel) {
+                protected void initChannel(SocketChannel channel) throws IOException {
                     // TODO: 28.09.2021
                     channel.pipeline().addLast(
 //                            new StringInboundHandler(),
