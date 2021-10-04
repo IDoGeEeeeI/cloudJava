@@ -13,7 +13,7 @@ public class FileMassage extends  Command {
         name = path.getFileName().toString();
         bytes = Files.readAllBytes(path);
 
-    }
+        }
 
     public String getName(){
         return name;
