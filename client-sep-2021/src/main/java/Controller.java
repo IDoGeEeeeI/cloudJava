@@ -25,8 +25,8 @@ public class Controller implements Initializable {
     public  ListView<String> listView1;
     public  TextField clientPath;
     public  TextField  servePath;
-    public Button butSend;
-    public Button butDown;
+    public Button buttSend;
+    public Button buttDown;
     public TextField input;
     private ObjectDecoderInputStream is;
     private ObjectEncoderOutputStream os;
@@ -62,7 +62,9 @@ public class Controller implements Initializable {
                             fileInS(name);
                             break;
                         case PATH_RESPONSE:
-//еще не дописал
+                            PathResponse response = (PathResponse) cmd;
+                            
+
                             break;
                         default:
                             log.debug("Invalid command {}", cmd.getType());
@@ -136,6 +138,7 @@ public class Controller implements Initializable {
     }
 
     private void addNavigationListeners(){
+        //клиентский list
         listView.setOnMouseClicked(e->{
             if(e.getClickCount()==2){
                 String  item = listView.getSelectionModel().getSelectedItem();
@@ -150,7 +153,7 @@ public class Controller implements Initializable {
                 }
             }
         });
-
+        //серверный list
         listView1.setOnMouseClicked(e->{
                     if(e.getClickCount()==2){
                         String  item = listView1.getSelectionModel().getSelectedItem();
@@ -164,6 +167,9 @@ public class Controller implements Initializable {
                     }
         });
     }
+
+
+
 //        listView.setOnMouseClicked(e ->{
 //            if(e.getClickCount()==2) {
 //                String item = listView.getSelectionModel().getSelectedItem();

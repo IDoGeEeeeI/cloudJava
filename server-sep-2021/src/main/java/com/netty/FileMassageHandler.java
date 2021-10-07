@@ -47,8 +47,20 @@ public class FileMassageHandler extends SimpleChannelInboundHandler<Command> {
             case LIST_REQUEST:
                 ctx.writeAndFlush(new ListResponse(ROOT));
                 break;
-            case PATH_REQUEST:
-//не дописал
+            case PATH_IN_REQUEST:
+                PathInRequest pathinrequest = (PathInRequest) cmd;
+                Path newPath = ROOT.resolve(pathinrequest.getDir());
+                if(Files.isDirectory(newPath)){
+                    ctx.writeAndFlush(new PathResponse(ROOT.toString()));
+                    ctx.writeAndFlush(new ListResponse(ROOT));
+                }
+                break;
+            case  PATH_UP_REQUEST:
+                if(ROOT.getParent() != null){
+                    ROOT = ROOT.getParent();
+                }
+                ctx.writeAndFlush(new PathResponse(ROOT.toString()));
+                ctx.writeAndFlush(new ListResponse(ROOT));
                 break;
             default:
                 log.debug("Invalid command {}", cmd.getType());
