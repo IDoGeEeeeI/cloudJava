@@ -1,10 +1,18 @@
 package com;
 
-public class PathInRequest {
-    public PathInRequest(String item) {
+public class PathInRequest extends Command{
+    private final String dir;
+
+    public PathInRequest(String dir){
+        this.dir=  dir;
+    }
+    public  String getDir(){
+        return dir;
     }
 
-    //скажи где ты сейчас(сервер)
 
+    public  CommandType getType(){
+        return CommandType.PATH_IN_REQUEST;
+    }
 
 }

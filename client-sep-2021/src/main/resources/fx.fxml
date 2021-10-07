@@ -1,41 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?language javascript?>
 
 <AnchorPane prefHeight="484.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
-   <MenuBar prefHeight="21.0" prefWidth="720.0">
-     <menus>
-       <Menu mnemonicParsing="false" text="File">
-         <items>
-           <MenuItem mnemonicParsing="false" text="Close" />
-         </items>
-       </Menu>
-       <Menu mnemonicParsing="false" text="Edit">
-         <items>
-           <MenuItem mnemonicParsing="false" text="Delete" />
-         </items>
-       </Menu>
-       <Menu mnemonicParsing="false" text="Help">
-         <items>
-           <MenuItem mnemonicParsing="false" text="About" />
-         </items>
-       </Menu>
-     </menus>
-      <opaqueInsets>
-         <Insets />
-      </opaqueInsets>
-   </MenuBar>
-    <ListView fx:id="listView1" layoutX="384.0" layoutY="75.0" prefHeight="334.0" prefWidth="275.0" />
-    <TextField fx:id="input" layoutX="64.0" layoutY="38.0" onAction="#send" prefHeight="38.0" prefWidth="275.0" />
-   <ListView fx:id="listView" layoutX="64.0" layoutY="75.0" prefHeight="334.0" prefWidth="275.0" />
-   <TextField fx:id="input1" layoutX="385.0" layoutY="38.0" onAction="#send" prefHeight="38.0" prefWidth="275.0" />
-   <Button layoutX="266.0" layoutY="38.0" minHeight="21.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="73.0" text="send" />
-   <Button layoutX="586.0" layoutY="38.0" minHeight="21.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="73.0" text="download" />
+    <ListView fx:id="listView1" layoutX="393.0" layoutY="75.0" prefHeight="334.0" prefWidth="275.0" />
+    <TextField fx:id="input" editable="false" layoutX="62.0" layoutY="38.0" prefHeight="38.0" prefWidth="265.0" />
+   <ListView fx:id="listView" layoutX="62.0" layoutY="75.0" prefHeight="334.0" prefWidth="265.0" />
+   <TextField fx:id="input1" editable="false" layoutX="393.0" layoutY="38.0" prefHeight="38.0" prefWidth="275.0" />
+   <Button fx:id="buttSend" layoutX="265.0" layoutY="38.0" minHeight="21.0" mnemonicParsing="false" onAction="upload" prefHeight="38.0" prefWidth="62.0" text="send" />
+   <Button fx:id="buttDown" layoutX="595.0" layoutY="38.0" minHeight="21.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="73.0" text="download" />
+   <Button fx:id="upPath" layoutX="333.0" layoutY="160.0" minWidth="38.0" mnemonicParsing="false" onAction="clientPathUp" prefHeight="31.0" prefWidth="54.0" text="up" />
+   <Button fx:id="downPath" layoutX="333.0" layoutY="320.0" mnemonicParsing="false" onAction="serverPathUp" prefHeight="31.0" prefWidth="54.0" text="down" />
+
 </AnchorPane>
