@@ -31,10 +31,39 @@ public class Controller implements Initializable {
     private ObjectDecoderInputStream is;
     private ObjectEncoderOutputStream os;
     private Path DIR_CLIENT;
+    private  Net net ;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //  net = Net.getInstance(s-> Platform.runLater(()-> listView.getItems().add(String.valueOf(s))));
+
+
+//          net = Net.getInstance(cmd-> {
+//        switch (cmd.getType()) {
+//            case FILE_MESSAGE:
+//                FileMassage fileMessage = (FileMassage) cmd;
+//                Files.write(
+//                        DIR_CLIENT.resolve(fileMessage.getName()),
+//                        fileMessage.getBytes()
+//                );
+//                fileIn();
+//                break;
+//            case LIST_RESPONSE:
+//                ListResponse listResponse = (ListResponse) cmd;
+//                List<String> name = listResponse.getName();
+//                fileInS(name);
+//                break;
+//            case PATH_RESPONSE:
+//                PathResponse response = (PathResponse) cmd;
+//                String path = response.getPath();
+//                Platform.runLater(()-> servePath.setText(path));
+//                break;
+//            default:
+//                log.debug("Invalid command {}", cmd.getType());
+//                break;
+//        }
+//         } );
+
+
         try {
             DIR_CLIENT = Paths.get("client-sep-2021", "rootForClient");
             Socket socket = new Socket("localhost",8189);
@@ -43,10 +72,13 @@ public class Controller implements Initializable {
 
             fileIn();
             addNavigationListeners();
+
         Thread thread = new Thread(() -> {
             try {
                 while (true) {
+//тут он сразу проскакивает на catch и в консоли выводит exception while......
                     Command cmd = (Command) is.readObject();
+                    log.debug("received {}", cmd);
                     switch (cmd.getType()) {
                         case FILE_MESSAGE:
                             FileMassage fileMessage = (FileMassage) cmd;
@@ -63,8 +95,8 @@ public class Controller implements Initializable {
                             break;
                         case PATH_RESPONSE:
                             PathResponse response = (PathResponse) cmd;
-                            
-
+                            String path = response.getPath();
+                            Platform.runLater(()-> servePath.setText(path));
                             break;
                         default:
                             log.debug("Invalid command {}", cmd.getType());
@@ -77,6 +109,8 @@ public class Controller implements Initializable {
         });
         thread.setDaemon(true);
         thread.start();
+
+            
     }catch(IOException ioException){
         log.debug("exception", ioException);
     }
@@ -100,24 +134,29 @@ public class Controller implements Initializable {
     }
 
 
-    private  void  upload(ActionEvent actionEvent) throws IOException {
+    public void download(javafx.event.ActionEvent actionEvent) throws IOException {
+        String fileName = listView1.getSelectionModel().getSelectedItem();
+        os.writeObject(new FileRequest(fileName));
+        os.flush();
+//////+
+        net.sendCommand(new FileRequest(fileName));
+    }
+
+    public void upload(javafx.event.ActionEvent actionEvent) throws IOException {
         String fileName = listView.getSelectionModel().getSelectedItem();
         FileMassage massage = new FileMassage(DIR_CLIENT.resolve(fileName));
         os.writeObject(massage);
         os.flush();
+//////+
+        net.sendCommand(new FileMassage(DIR_CLIENT.resolve(fileName)));
     }
-    private void download(ActionEvent actionEvent) throws IOException {
-      String fileName = listView1.getSelectionModel().getSelectedItem();
-      os.writeObject(new FileRequest(fileName));
-      os.flush();
-
-    }
-    public void clientPathUp(ActionEvent actionEvent) throws IOException {
+    // выскакивает exception при нажатии + также не отображает path server (пуслой лист1)
+    public void clientPathUp(javafx.event.ActionEvent actionEvent) throws IOException {
         DIR_CLIENT = DIR_CLIENT.getParent();
         clientPath.setText(DIR_CLIENT.toString());
         refreshClientView();
     }
-    public void serverPathUp(ActionEvent actionEvent) throws IOException {
+    public void serverPathUp(javafx.event.ActionEvent actionEvent) throws IOException {
         os.writeObject(new PathUpRequest());
         os.flush();
     }
@@ -167,6 +206,7 @@ public class Controller implements Initializable {
                     }
         });
     }
+
 
 
 

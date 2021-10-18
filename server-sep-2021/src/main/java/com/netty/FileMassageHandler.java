@@ -32,7 +32,7 @@ public class FileMassageHandler extends SimpleChannelInboundHandler<Command> {
     protected void channelRead0(ChannelHandlerContext ctx, Command cmd) throws Exception {
 
 
-
+//при отправлении выкидывает exception (ссылаясь на massageHandler)
         switch (cmd.getType()){
             case FILE_MESSAGE:
                 FileMassage fileMassage = (FileMassage) cmd;

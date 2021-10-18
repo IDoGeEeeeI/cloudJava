@@ -9,11 +9,15 @@
 <AnchorPane prefHeight="484.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <ListView fx:id="listView1" layoutX="393.0" layoutY="75.0" prefHeight="334.0" prefWidth="275.0" />
     <TextField fx:id="input" editable="false" layoutX="62.0" layoutY="38.0" prefHeight="38.0" prefWidth="265.0" />
-   <ListView fx:id="listView" layoutX="62.0" layoutY="75.0" prefHeight="334.0" prefWidth="265.0" />
-   <TextField fx:id="input1" editable="false" layoutX="393.0" layoutY="38.0" prefHeight="38.0" prefWidth="275.0" />
-   <Button fx:id="buttSend" layoutX="265.0" layoutY="38.0" minHeight="21.0" mnemonicParsing="false" onAction="upload" prefHeight="38.0" prefWidth="62.0" text="send" />
-   <Button fx:id="buttDown" layoutX="595.0" layoutY="38.0" minHeight="21.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="73.0" text="download" />
-   <Button fx:id="upPath" layoutX="333.0" layoutY="160.0" minWidth="38.0" mnemonicParsing="false" onAction="clientPathUp" prefHeight="31.0" prefWidth="54.0" text="up" />
-   <Button fx:id="downPath" layoutX="333.0" layoutY="320.0" mnemonicParsing="false" onAction="serverPathUp" prefHeight="31.0" prefWidth="54.0" text="down" />
+   <ListView fx:id="listView"  layoutX="62.0" layoutY="75.0" prefHeight="334.0" prefWidth="265.0" />
+   <TextField fx:id="input1"  editable="false" layoutX="393.0" layoutY="38.0" prefHeight="38.0" prefWidth="275.0" />
+   <Button fx:id="buttSend"  layoutX="265.0" layoutY="38.0" minHeight="21.0"
+           mnemonicParsing="false" onAction="#upload" prefHeight="38.0" prefWidth="62.0" text="send" />
+   <Button fx:id="buttDown" layoutX="595.0" layoutY="38.0" minHeight="21.0"
+           mnemonicParsing="false" onAction="#download" prefHeight="38.0" prefWidth="73.0" text="download" />
+   <Button fx:id="upPath" layoutX="333.0" layoutY="160.0" minWidth="38.0"
+           mnemonicParsing="false" onAction="#clientPathUp" prefHeight="31.0" prefWidth="54.0" text="up" />
+   <Button fx:id="downPath" layoutX="333.0" layoutY="320.0"
+           mnemonicParsing="false" onAction="#serverPathUp" prefHeight="31.0" prefWidth="54.0" text="down" />
 
 </AnchorPane>

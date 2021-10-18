@@ -10,6 +10,8 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import lombok.extern.slf4j.Slf4j;
+import com.Command;
+import com.ListRequest;
 
 @Slf4j
 public class Net {
@@ -34,7 +36,6 @@ public class Net {
 
             try {
                 Bootstrap bootstrap = new Bootstrap();
-
                 bootstrap.group(group)
                         .channel(NioSocketChannel.class)
                         .handler(new ChannelInitializer<SocketChannel>() {
@@ -44,13 +45,14 @@ public class Net {
                                 channel.pipeline().addLast(
                                         new ObjectEncoder(),
                                         new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-                                        new ClientStringHandler(callback)
+                                        new ClientCommandHandler(callback)
                                 );
                             }
                         });
 
                 ChannelFuture future = bootstrap.connect("localhost", 8189).sync();
-                log.debug("Client connected");
+                sendCommand(new ListRequest());
+                //log.debug("Client connected");
                 future.channel().closeFuture().sync(); // block
             } catch (Exception e) {
                 log.error("", e);
