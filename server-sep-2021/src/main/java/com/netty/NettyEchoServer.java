@@ -36,11 +36,10 @@ try {
                 protected void initChannel(SocketChannel channel) throws IOException {
                     // TODO: 28.09.2021
                     channel.pipeline().addLast(
-//                            new StringInboundHandler(),
-//                            new StringOutboundHandler(),
                             new ObjectEncoder(),
                             new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-                            new FileMassageHandler()
+                            new FileMassageHandler(),
+                            new FileMassageHandler().channelActive();
                     );
                 }
             })
@@ -48,6 +47,7 @@ try {
             .sync();
     log.debug("Server started..");
     channelFuture.channel().closeFuture().sync();//block
+
 } catch (Exception e){
     log.debug("Server exception: Stacktrace", e);
 } finally {
