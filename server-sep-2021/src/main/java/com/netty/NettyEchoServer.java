@@ -34,12 +34,11 @@ try {
             .childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel channel) throws IOException {
-                    // TODO: 28.09.2021
                     channel.pipeline().addLast(
-                            new ObjectEncoder(),
                             new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-                            new FileMassageHandler(),
-                            new FileMassageHandler().channelActive();
+                            new ObjectEncoder(),
+                            new FileMassageHandler()
+
                     );
                 }
             })

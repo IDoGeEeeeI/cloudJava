@@ -14,7 +14,9 @@ import java.nio.file.Paths;
 @Slf4j
 
 public class FileMassageHandler extends SimpleChannelInboundHandler<Command> {
+
     private static Path ROOT;
+    private  static Path clientRoot;
     public FileMassageHandler() throws IOException {
          ROOT = Paths.get("server-sep-2021", "root");
         if (!Files.exists(ROOT)) {
@@ -24,15 +26,11 @@ public class FileMassageHandler extends SimpleChannelInboundHandler<Command> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx)throws Exception{
-        ctx.writeAndFlush(new ListResponse(ROOT));
-        ctx.writeAndFlush(new PathResponse(ROOT.toString()));
+        log.debug("Client connected..");
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Command cmd) throws Exception {
-
-
-//при отправлении выкидывает exception (ссылаясь на massageHandler)
         switch (cmd.getType()){
             case FILE_MESSAGE:
                 FileMassage fileMassage = (FileMassage) cmd;
@@ -41,11 +39,13 @@ public class FileMassageHandler extends SimpleChannelInboundHandler<Command> {
                 break;
             case FILE_REQUEST:
                 FileRequest fileRequest = (FileRequest) cmd;
-                FileMassage msg = new FileMassage(ROOT.resolve(fileRequest.getfName()));
-                ctx.writeAndFlush(msg);
+                String fileName = fileRequest.getfName();
+                Path file = Paths.get(String.valueOf(ROOT),fileName);
+                ctx.writeAndFlush(new FileMassage(file));
                 break;
             case LIST_REQUEST:
                 ctx.writeAndFlush(new ListResponse(ROOT));
+                ctx.writeAndFlush(new PathResponse(ROOT.toString()));
                 break;
             case PATH_IN_REQUEST:
                 PathInRequest pathinrequest = (PathInRequest) cmd;
