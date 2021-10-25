@@ -1,6 +1,7 @@
 package com.netty;
 
 import com.*;
+import com.sun.tools.javac.util.List;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +12,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+
 @Slf4j
 
 public class FileMassageHandler extends SimpleChannelInboundHandler<Command> {
 
     private static Path ROOT;
     private  static Path clientRoot;
+    private static final int filesPartsSize = 100000;
     public FileMassageHandler() throws IOException {
          ROOT = Paths.get("server-sep-2021", "root");
         if (!Files.exists(ROOT)) {
@@ -68,4 +72,18 @@ public class FileMassageHandler extends SimpleChannelInboundHandler<Command> {
         }
 
     }
+    private void sendFileToclient(Path fileToSend,String fileName,ChannelHandlerContext ctx) throws IOException {
+        long fileSize = Files.size(fileToSend);
+        if(fileSize<= filesPartsSize){
+            ctx.writeAndFlush(new FileMassage(fileToSend));
+
+        }
+    }
+//    private static ListResponse createFileList (String str) throws IOException {
+//        File dir = new File(String.valueOf(str));
+//        File[] arrFiles = dir.listFiles();
+//        List<File> list = (List<File>) Arrays.asList(arrFiles);
+//        ListResponse listResponse = new ListResponse(ROOT);
+//        return listResponse;
+//    }
 }
